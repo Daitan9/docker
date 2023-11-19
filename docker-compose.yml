@@ -1,0 +1,121 @@
+version: "3"
+services:
+
+  filebrowser:
+    image: hurlenko/filebrowser
+    container_name: filebrowser
+    ports:
+      - "444:8080"
+    volumes:
+      - /:/data
+      - /home/lilian/docker/apps/filebrowser/config/:/config
+    restart: always
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    ports:
+      - "8191:8191"
+    restart: unless-stopped
+
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/lilian/docker/apps/homarr/configs:/app/data/configs
+      - /home/lilian/docker/apps/homarr/icons:/app/public/icons
+      - /home/lilian/docker/apps/homarr/data:/data
+    ports:
+      - "7575:7575"
+
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - AUTO_UPDATE=true
+    volumes:
+      - /home/lilian/docker/apps/jackett/config/:/config
+    ports:
+      - "9117:9117"
+    restart: unless-stopped
+
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    ports:
+      - "8096:8096"
+    volumes:
+      - /home/lilian/docker/apps/jellyfin/config/:/config
+      - /home/lilian/docker/apps/jellyfin/cache/:/cache
+      - /mnt:/media
+    restart: unless-stopped
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    ports:
+      - "5055:5055"
+    volumes:
+      - /home/lilian/docker/apps/jellyseer/config/:/app/config
+    restart: unless-stopped
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9443:9443"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - WEBUI_PORT=8081
+    volumes:
+      - /home/lilian/docker/apps/qbittorrent/config/:/config
+      - /mnt:/downloads
+    ports:
+      - "8081:8081"
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    volumes:
+      - /home/lilian/docker/apps/radarr/config/:/config
+      - /mnt:/movies
+      - /mnt:/downloads
+    ports:
+      - "7878:7878"
+    restart: unless-stopped
+
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    volumes:
+      - /home/lilian/docker/apps/sonarr/config/:/config
+      - /mnt:/downloads
+      - /mnt:/tv
+    ports:
+      - "8989:8989"
+    restart: unless-stopped
+
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    volumes:
+      - /home/lilian/docker/apps/syncthing/config:/config
+      - /mnt/hddlv/storage/syncthing/:/data1
+    ports:
+      - "8384:8384"
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    restart: unless-stopped
