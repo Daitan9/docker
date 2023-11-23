@@ -119,3 +119,10 @@ services:
       - 22000:22000/udp
       - 21027:21027/udp
     restart: unless-stopped
+  memos:
+    image: neosmemo/memos:latest
+    container_name: memos
+    volumes:
+      - /home/lilian/docker/apps/memos/:/var/opt/memos
+    ports:
+      - "5230:5230"
